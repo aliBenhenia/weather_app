@@ -1,10 +1,8 @@
-
-
 import axios from 'axios';
 
 const apiKey = '7c99ecd935038b5e95b2b9f833a4ce57'; 
 
-export const fetchWeatherDataByCoordinates = async (lat, lon) => {
+export const fetchWeatherDataByCoordinates = async (lat: number, lon: number) => {
   try {
     const response = await axios.get(
       `https://api.openweathermap.org/data/2.5/weather`, {
@@ -23,7 +21,7 @@ export const fetchWeatherDataByCoordinates = async (lat, lon) => {
   }
 };
 
-export const fetchWeatherDataByCity = async (city) => {
+export const fetchWeatherDataByCity = async (city: string) => {
   try {
     const response = await axios.get(
       `https://api.openweathermap.org/data/2.5/weather`, {
@@ -35,7 +33,7 @@ export const fetchWeatherDataByCity = async (city) => {
       }
     );
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching weather data by city:', error);
     throw error;
   }
