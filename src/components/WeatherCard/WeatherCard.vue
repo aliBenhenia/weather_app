@@ -45,7 +45,8 @@
 
     <div class="temperature">
       <div class="temp-left">
-        <img :src="weatherIcon" alt="Weather Icon">
+        <!-- <img :src="weatherIcon" alt="Weather Icon"> -->
+        <li class="fas fa-cloud"></li>
         <div class="temp-degree">{{ formattedTemperature }}</div>
       </div>
       <div class="temp-info">
@@ -85,20 +86,26 @@
     </div>
 
     <div class="forecast-content">
-      <div class="hourly-forecast" v-if="activeTab === 'hourly'">
-        <div class="hour" v-for="(hour, index) in hourlyForecast" :key="index">
-          <div>{{ hour.time }}</div>
-          <img :src="hour.icon" alt="Weather Icon">
-          <div>{{ hour.temp }}°</div>
-        </div>
-      </div>
-      <div class="daily-forecast" v-if="activeTab === 'daily'">
-        <div class="day" v-for="(day, index) in dailyForecast" :key="index">
-          <div>{{ day.date }}</div>
-          <img :src="day.icon" alt="Weather Icon">
-          <div>{{ day.temp }}°</div>
-        </div>
-      </div>
+    <!-- Hourly Forecast -->
+<div class="hourly-forecast" v-if="activeTab === 'hourly'">
+  <div class="hour" v-for="(hour, index) in hourlyForecast" :key="index">
+    <div class="hour-number">{{ index + 1 }}</div>
+    <div class="hour-time">{{ hour.time }}</div>
+    <i :class="hour.icon"></i> <!-- Use Font Awesome icon for hourly forecast -->
+    <div class="hour-temp">{{ hour.temp }}°</div>
+  </div>
+</div>
+
+<!-- Daily Forecast -->
+<div class="daily-forecast" v-if="activeTab === 'daily'">
+  <div class="day" v-for="(day, index) in dailyForecast" :key="index">
+    <div class="day-number">{{ index + 1 }}</div>
+    <div class="day-date">{{ day.date }}</div>
+    <i :class="day.icon"></i> <!-- Use Font Awesome icon for daily forecast -->
+    <div class="day-temp">{{ day.temp }}°</div>
+  </div>
+</div>
+
     </div>
   </div>
 </template>
@@ -201,34 +208,54 @@ export default {
       }
     },
     updateWeatherData(data: any): void {
-      this.cityName = data.name;
-      this.weatherDescription = data.weather[0].description;
-      this.weatherIcon = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
-      
-      this.hourlyForecast = [
-        { time: 'Now', temp: data.main.temp, feels_like: data.main.feels_like, icon: this.weatherIcon },
-        { time: '1 PM', temp: data.main.temp + 1, icon: this.weatherIcon },
-        { time: '2 PM', temp: data.main.temp + 2, icon: this.weatherIcon },
-        { time: '3 PM', temp: data.main.temp + 3, icon: this.weatherIcon },
-      ];
+  this.cityName = data.name;
+  this.weatherDescription = data.weather[0].description;
+  
+  // Map weather conditions to Font Awesome icons
+  const weatherIconMap: Record<string, string> = {
+    'clear': 'fas fa-sun',            // Clear sky
+    'clouds': 'fas fa-cloud',         // Clouds
+    'rain': 'fas fa-cloud-showers-heavy', // Rain
+    'drizzle': 'fas fa-cloud-rain',   // Drizzle
+    'thunderstorm': 'fas fa-bolt',    // Thunderstorm
+    'snow': 'fas fa-snowflake',       // Snow
+    'mist': 'fas fa-smog',            // Mist
+    'fog': 'fas fa-smog',             // Fog
+    'haze': 'fas fa-smog',            // Haze
+  };
+  
+  // Extract the main weather condition description (clear, rain, etc.)
+  const mainCondition = data.weather[0].main.toLowerCase();
+  
+  // Assign the corresponding Font Awesome icon
+  this.weatherIcon = weatherIconMap[mainCondition] || 'fas fa-cloud';  // Default to cloud icon if no match
+  
+  // Prepare the forecast data
+  this.hourlyForecast = [
+    { time: 'Now', temp: data.main.temp, feels_like: data.main.feels_like, icon: this.weatherIcon },
+    { time: '1 PM', temp: data.main.temp + 1, icon: this.weatherIcon },
+    { time: '2 PM', temp: data.main.temp + 2, icon: this.weatherIcon },
+    { time: '3 PM', temp: data.main.temp + 3, icon: this.weatherIcon },
+  ];
 
-      this.dailyForecast = [
-        { date: 'Tomorrow', temp: data.main.temp + 2, icon: this.weatherIcon },
-        { date: 'Day 3', temp: data.main.temp + 3, icon: this.weatherIcon },
-        { date: 'Day 4', temp: data.main.temp + 1, icon: this.weatherIcon },
-        { date: 'Day 5', temp: data.main.temp, icon: this.weatherIcon },
-      ];
+  this.dailyForecast = [
+    { date: 'Tomorrow', temp: data.main.temp + 2, icon: this.weatherIcon },
+    { date: 'Day 3', temp: data.main.temp + 3, icon: this.weatherIcon },
+    { date: 'Day 4', temp: data.main.temp + 1, icon: this.weatherIcon },
+    { date: 'Day 5', temp: data.main.temp, icon: this.weatherIcon },
+  ];
 
-      this.weatherConditions = [
-        { name: 'Humidity', value: `${data.main.humidity}%`, icon: 'https://img.icons8.com/ios/50/000000/humidity.png' },
-        { name: 'Wind', value: `${data.wind.speed} m/s`, icon: 'https://img.icons8.com/ios/50/000000/wind.png' },
-        { name: 'Precipitation', value: '15%', icon: 'https://img.icons8.com/ios/50/000000/rain.png' },
-        { name: 'AQI', value: this.aqi.toString(), icon: 'https://img.icons8.com/ios/50/000000/air-quality.png' }
-      ];
+  this.weatherConditions = [
+    { name: 'Humidity', value: `${data.main.humidity}%`, icon: 'https://img.icons8.com/ios/50/000000/humidity.png' },
+    { name: 'Wind', value: `${data.wind.speed} m/s`, icon: 'https://img.icons8.com/ios/50/000000/wind.png' },
+    { name: 'Precipitation', value: '15%', icon: 'https://img.icons8.com/ios/50/000000/rain.png' },
+    { name: 'AQI', value: this.aqi.toString(), icon: 'https://img.icons8.com/ios/50/000000/air-quality.png' }
+  ];
 
-      this.aqi = 300;
-      this.aqiPercentage = Math.min(this.aqi / 500 * 100, 100);
-    },
+  this.aqi = 300;
+  this.aqiPercentage = Math.min(this.aqi / 500 * 100, 100);
+}
+,
   },
   mounted() {
     this.getLocation();
