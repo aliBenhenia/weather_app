@@ -113,7 +113,8 @@
 
 <script>
 import settingsIcon from '@/assets/settings-4-fill.svg';
-import axios from 'axios';
+import { fetchWeatherDataByCoordinates, fetchWeatherDataByCity } from '@/services/weatherService';
+
 export default {
   data() {
     return {
@@ -178,23 +179,21 @@ export default {
         this.fetchWeatherDataByCity(this.cityName); // Fallback to London
       }
     },
-    fetchWeatherData(lat, lon) {
-      const apiKey = '7c99ecd935038b5e95b2b9f833a4ce57'; // Replace with your OpenWeatherMap API key
-      fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`)
-        .then(response => response.json())
-        .then(data => {
-          this.updateWeatherData(data);
-        })
-        .catch(error => console.error('Error fetching weather data:', error));
+    async fetchWeatherData(lat, lon) {
+      try {
+        const data = await fetchWeatherDataByCoordinates(lat, lon);
+        this.updateWeatherData(data);
+      } catch (error) {
+        console.error('Error fetching weather data:', error);
+      }
     },
-    fetchWeatherDataByCity(city) {
-      const apiKey = '948c50cf7336500ff42910cfe91fcdb3'; // Replace with your OpenWeatherMap API key
-      fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
-        .then(response => response.json())
-        .then(data => {
-          this.updateWeatherData(data);
-        })
-        .catch(error => console.error('Error fetching weather data by city:', error));
+    async fetchWeatherDataByCity(city) {
+      try {
+        const data = await fetchWeatherDataByCity(city);
+        this.updateWeatherData(data);
+      } catch (error) {
+        console.error('Error fetching weather data by city:', error);
+      }
     },
     updateWeatherData(data) {
       this.cityName = data.name;
@@ -229,6 +228,7 @@ export default {
       this.aqiPercentage = Math.min(this.aqi / 500 * 100, 100); // Example calculation for AQI bar
     },
   },
+
   mounted() {
     this.getLocation();
   }
