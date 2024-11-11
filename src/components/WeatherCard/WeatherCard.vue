@@ -1,6 +1,5 @@
 <template>
   <div class="weather-card">
-    <!-- Header Section -->
     <div class="header">
       {{ cityName }}
       <span class="icon-container" @click="toggleDropdown">
@@ -8,7 +7,6 @@
       </span>
     </div>
 
-    <!-- Dropdown for Settings -->
     <transition name="fade">
       <div v-if="dropdownVisible" class="settings-dropdown">
         <div class="dropdown-block">
@@ -41,12 +39,10 @@
       </div>
     </transition>
 
-    <!-- Date and Time -->
     <div class="date-time">
       {{ currentDateTime }}
     </div>
 
-    <!-- Temperature Section -->
     <div class="temperature">
       <div class="temp-left">
         <img :src="weatherIcon" alt="Weather Icon">
@@ -58,7 +54,6 @@
       </div>
     </div>
 
-    <!-- Weather Conditions -->
     <div class="conditions">
       <div class="condition" v-for="(condition, index) in weatherConditions" :key="index">
         <div class="condition-left">
@@ -71,7 +66,6 @@
       </div>
     </div>
 
-    <!-- AQI Section -->
     <div class="aqi">
       <div class="aqi-top">
         <span class="aqi-text">AQI</span>
@@ -85,13 +79,11 @@
       </div>
     </div>
 
-    <!-- Forecast Tabs -->
     <div class="forecast-tabs">
       <div class="tab" :class="{ active: activeTab === 'hourly' }" @click="toggleTab('hourly')">Hourly Forecast</div>
       <div class="tab" :class="{ active: activeTab === 'daily' }" @click="toggleTab('daily')">7-Day Forecast</div>
     </div>
 
-    <!-- Hourly and Daily Forecast -->
     <div class="forecast-content">
       <div class="hourly-forecast" v-if="activeTab === 'hourly'">
         <div class="hour" v-for="(hour, index) in hourlyForecast" :key="index">
@@ -111,61 +103,61 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import settingsIcon from '@/assets/settings-4-fill.svg';
 import { fetchWeatherDataByCoordinates, fetchWeatherDataByCity } from '@/services/weatherService';
 
 export default {
   data() {
     return {
-      cityName: 'London', // Default to London
+      cityName: 'London', 
       activeTab: 'hourly',
       dropdownVisible: false,
-      temperatureUnit: 'C', // Default to Celsius
-      measurementUnit: 'metric', // Default to Metric
-      hourlyForecast: [],
-      dailyForecast: [],
-      weatherConditions: [],
+      temperatureUnit: 'C',
+      measurementUnit: 'metric',
+      hourlyForecast: [] as { time: string; temp: number; icon: string; feels_like?: number }[],
+      dailyForecast: [] as { date: string; temp: number; icon: string }[],
+      weatherConditions: [] as { name: string; value: string; icon: string }[],
       weatherIcon: '',
       weatherDescription: '',
       aqi: 0,
       aqiPercentage: 0,
       settingsIcon,
-      lat: null,
-      lon: null,
+      lat: null as number | null,
+      lon: null as number | null,
     };
   },
   computed: {
-    formattedTemperature() {
+    formattedTemperature(): string {
       const temp = this.temperatureUnit === 'F'
         ? (this.hourlyForecast[0]?.temp * 9 / 5 + 32).toFixed(1)
         : this.hourlyForecast[0]?.temp;
       return temp || 'N/A';
     },
-    formattedFeelsLike() {
+    formattedFeelsLike(): string {
       const feelsLike = this.temperatureUnit === 'F'
         ? (this.hourlyForecast[0]?.feels_like * 9 / 5 + 32).toFixed(1)
         : this.hourlyForecast[0]?.feels_like;
       return feelsLike || 'N/A';
     },
-    currentDateTime() {
-      return new Date().toLocaleString(); // Adjust format as needed
+    currentDateTime(): string {
+      return new Date().toLocaleString(); 
     }
   },
   methods: {
-    toggleTab(tab) {
+    toggleTab(tab: string): void {
       this.activeTab = tab;
     },
-    toggleDropdown() {
+    toggleDropdown(): void {
       this.dropdownVisible = !this.dropdownVisible;
     },
-    updateTemperatureUnit(unit) {
+    updateTemperatureUnit(unit: string): void {
       this.temperatureUnit = unit;
     },
-    updateMeasurementUnit(unit) {
+    updateMeasurementUnit(unit: string): void {
       this.measurementUnit = unit;
     },
-    getLocation() {
+    getLocation(): void {
       const storedLat = localStorage.getItem('lat');
       const storedLon = localStorage.getItem('lon');
 
@@ -178,21 +170,21 @@ export default {
           position => {
             this.lat = position.coords.latitude;
             this.lon = position.coords.longitude;
-            localStorage.setItem('lat', this.lat);
-            localStorage.setItem('lon', this.lon);
+            localStorage.setItem('lat', this.lat.toString());
+            localStorage.setItem('lon', this.lon.toString());
             this.fetchWeatherData(this.lat, this.lon);
           },
           error => {
             console.error('Geolocation error:', error);
-            this.fetchWeatherDataByCity(this.cityName); // Fallback to London
+            this.fetchWeatherDataByCity(this.cityName); 
           }
         );
       } else {
         console.error('Geolocation not supported');
-        this.fetchWeatherDataByCity(this.cityName); // Fallback to London
+        this.fetchWeatherDataByCity(this.cityName); 
       }
     },
-    async fetchWeatherData(lat, lon) {
+    async fetchWeatherData(lat: number, lon: number): Promise<void> {
       try {
         const data = await fetchWeatherDataByCoordinates(lat, lon);
         this.updateWeatherData(data);
@@ -200,7 +192,7 @@ export default {
         console.error('Error fetching weather data:', error);
       }
     },
-    async fetchWeatherDataByCity(city) {
+    async fetchWeatherDataByCity(city: string): Promise<void> {
       try {
         const data = await fetchWeatherDataByCity(city);
         this.updateWeatherData(data);
@@ -208,12 +200,11 @@ export default {
         console.error('Error fetching weather data by city:', error);
       }
     },
-    updateWeatherData(data) {
+    updateWeatherData(data: any): void {
       this.cityName = data.name;
       this.weatherDescription = data.weather[0].description;
       this.weatherIcon = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
       
-      // Fake hourly forecast data
       this.hourlyForecast = [
         { time: 'Now', temp: data.main.temp, feels_like: data.main.feels_like, icon: this.weatherIcon },
         { time: '1 PM', temp: data.main.temp + 1, icon: this.weatherIcon },
@@ -221,7 +212,6 @@ export default {
         { time: '3 PM', temp: data.main.temp + 3, icon: this.weatherIcon },
       ];
 
-      // Fake daily forecast data
       this.dailyForecast = [
         { date: 'Tomorrow', temp: data.main.temp + 2, icon: this.weatherIcon },
         { date: 'Day 3', temp: data.main.temp + 3, icon: this.weatherIcon },
@@ -233,15 +223,13 @@ export default {
         { name: 'Humidity', value: `${data.main.humidity}%`, icon: 'https://img.icons8.com/ios/50/000000/humidity.png' },
         { name: 'Wind', value: `${data.wind.speed} m/s`, icon: 'https://img.icons8.com/ios/50/000000/wind.png' },
         { name: 'Precipitation', value: '15%', icon: 'https://img.icons8.com/ios/50/000000/rain.png' },
-        { name: 'AQI', value: this.aqi, icon: 'https://img.icons8.com/ios/50/000000/air-quality.png' }
+        { name: 'AQI', value: this.aqi.toString(), icon: 'https://img.icons8.com/ios/50/000000/air-quality.png' }
       ];
 
-      // Placeholder for AQI data
-      this.aqi = 300; // Update with actual AQI data if available
-      this.aqiPercentage = Math.min(this.aqi / 500 * 100, 100); // Example calculation for AQI bar
+      this.aqi = 300;
+      this.aqiPercentage = Math.min(this.aqi / 500 * 100, 100);
     },
   },
-
   mounted() {
     this.getLocation();
   }
