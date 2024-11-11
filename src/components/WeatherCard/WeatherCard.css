@@ -109,11 +109,71 @@
 }
 
 .conditions {
-  display: flex;
-  justify-content: space-between;
-  font-size: 1.1rem;
-  margin-bottom: 15px;
-}
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 equal columns */
+    gap: 20px; /* Space between each condition */
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+  }
+  
+  .condition {
+    display: flex;
+    justify-content: space-between; /* Space between the left and right sections */
+    align-items: center;
+  }
+  
+  .condition-left {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between the icon and the name */
+  }
+  
+  .condition img {
+    width: 30px; /* Icon size */
+    height: 30px; /* Icon size */
+  }
+  
+  .condition-name {
+    font-size: 1rem;
+    color: #6b7280; /* Light gray for the label */
+  }
+  
+  .condition-right {
+    text-align: right; /* Align value to the right */
+  }
+  
+  .condition-value {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333; /* Dark color for the value */
+  }
+  
+  /* Responsiveness for medium screens */
+  @media (max-width: 1024px) {
+    .conditions {
+      grid-template-columns: 1fr; /* 1 column on smaller screens */
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .condition {
+      font-size: 1rem; /* Slightly smaller font on mobile */
+    }
+  
+    .condition-name {
+      font-size: 0.9rem;
+    }
+  
+    .condition-value {
+      font-size: 1rem;
+    }
+  
+    .condition img {
+      width: 24px; /* Resize icons for smaller screens */
+      height: 24px;
+    }
+  }
+  
 
 .aqi {
   display: flex;

@@ -22,12 +22,46 @@
   </div>
 </div>
 
-    <div class="conditions">
-      <div>Humidity<br><strong>40%</strong></div>
-      <div>Wind<br><strong>1 km/h</strong></div>
-      <div>Precipitation<br><strong>15%</strong></div>
-      <div>AQI<br><strong>141</strong></div>
+<div class="conditions">
+  <div class="condition">
+    <div class="condition-left">
+      <img src="https://img.icons8.com/ios/50/000000/humidity.png" alt="Humidity Icon">
+      <span class="condition-name">Humidity</span>
     </div>
+    <div class="condition-right">
+      <strong class="condition-value">40%</strong>
+    </div>
+  </div>
+  <div class="condition">
+    <div class="condition-left">
+      <img src="https://img.icons8.com/ios/50/000000/wind.png" alt="Wind Icon">
+      <span class="condition-name">Wind</span>
+    </div>
+    <div class="condition-right">
+      <strong class="condition-value">1 km/h</strong>
+    </div>
+  </div>
+  <div class="condition">
+    <div class="condition-left">
+      <img src="https://img.icons8.com/ios/50/000000/rain.png" alt="Precipitation Icon">
+      <span class="condition-name">Precipitation</span>
+    </div>
+    <div class="condition-right">
+      <strong class="condition-value">15%</strong>
+    </div>
+  </div>
+  <div class="condition">
+    <div class="condition-left">
+      <img src="https://img.icons8.com/ios/50/000000/air-quality.png" alt="AQI Icon">
+      <span class="condition-name">AQI</span>
+    </div>
+    <div class="condition-right">
+      <strong class="condition-value">141</strong>
+    </div>
+  </div>
+</div>
+
+
     <div class="aqi">
       AQI
       <div class="aqi-bar" style="width: 50%;"></div>
@@ -57,6 +91,10 @@
 
 <script>
 import settingsIcon from '@/assets/settings-4-fill.svg';
+import humadityIcon from '@/assets/a.svg';
+import windIcon from '@/assets/b.svg';
+import precipitationIcon from '@/assets/c.svg';
+import aqiIcon from '@/assets/d.svg';
 export default {
   data() {
     return {
