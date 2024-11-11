@@ -3,10 +3,43 @@
     <!-- Header Section -->
     <div class="header">
       Casablanca
-      <span class="icon-container">
+      <span class="icon-container" @click="toggleDropdown">
         <img class="settings-icon" :src="settingsIcon" alt="Settings">
       </span>
     </div>
+
+    <!-- Dropdown for Settings -->
+    <transition name="fade">
+      <div v-if="dropdownVisible" class="settings-dropdown">
+        <div class="dropdown-block">
+          <div class="block-header">Temperature</div>
+          <div class="tabs">
+            <div 
+              class="tab" 
+              :class="{ active: temperatureUnit === 'C' }" 
+              @click="updateTemperatureUnit('C')">°C</div>
+            <div 
+              class="tab" 
+              :class="{ active: temperatureUnit === 'F' }" 
+              @click="updateTemperatureUnit('F')">°F</div>
+          </div>
+        </div>
+
+        <div class="dropdown-block">
+          <div class="block-header">Measurement</div>
+          <div class="tabs">
+            <div 
+              class="tab" 
+              :class="{ active: measurementUnit === 'metric' }" 
+              @click="updateMeasurementUnit('metric')">Metric</div>
+            <div 
+              class="tab" 
+              :class="{ active: measurementUnit === 'imperial' }" 
+              @click="updateMeasurementUnit('imperial')">Imperial</div>
+          </div>
+        </div>
+      </div>
+    </transition>
 
     <!-- Date and Time -->
     <div class="date-time">
@@ -17,11 +50,11 @@
     <div class="temperature">
       <div class="temp-left">
         <img src="https://img.icons8.com/ios/50/000000/partly-cloudy-day.png" alt="Weather Icon">
-        <div class="temp-degree">19°</div>
+        <div class="temp-degree">{{ formattedTemperature }}</div>
       </div>
       <div class="temp-info">
         <div class="weather-description">Partly Cloudy</div>
-        <div class="feels-like">Feels like: 21°</div>
+        <div class="feels-like">Feels like: {{ formattedFeelsLike }}</div>
       </div>
     </div>
 
@@ -42,7 +75,7 @@
           <span class="condition-name">Wind</span>
         </div>
         <div class="condition-right">
-          <strong class="condition-value">1 km/h</strong>
+          <strong class="condition-value">{{ formattedWindSpeed }}</strong>
         </div>
       </div>
       <div class="condition">
@@ -87,7 +120,6 @@
 
     <!-- Hourly and Daily Forecast -->
     <div class="forecast-content">
-      <!-- Hourly Forecast -->
       <div class="hourly-forecast" v-if="activeTab === 'hourly'">
         <div class="hour" v-for="(hour, index) in hourlyForecast" :key="index">
           <div>{{ hour.time }}</div>
@@ -95,8 +127,6 @@
           <div>{{ hour.temp }}°</div>
         </div>
       </div>
-
-      <!-- Daily Forecast -->
       <div class="daily-forecast" v-if="activeTab === 'daily'">
         <div class="day" v-for="(day, index) in dailyForecast" :key="index">
           <div>{{ day.date }}</div>
@@ -115,6 +145,9 @@ export default {
   data() {
     return {
       activeTab: 'hourly',
+      dropdownVisible: false,
+      temperatureUnit: 'C', // Default to Celsius
+      measurementUnit: 'metric', // Default to Metric
       hourlyForecast: [
         { time: '9:00', icon: 'https://img.icons8.com/ios/24/000000/partly-cloudy-day.png', temp: 19 },
         { time: '10:00', icon: 'https://img.icons8.com/ios/24/000000/sun.png', temp: 21 },
@@ -137,12 +170,43 @@ export default {
       settingsIcon,
     };
   },
+  computed: {
+    formattedTemperature() {
+      if (this.temperatureUnit === 'F') {
+        return (this.hourlyForecast[0].temp * 9 / 5 + 32).toFixed(1); // Convert to Fahrenheit
+      }
+      return this.hourlyForecast[0].temp; // Celsius
+    },
+    formattedFeelsLike() {
+      if (this.temperatureUnit === 'F') {
+        return (21 * 9 / 5 + 32).toFixed(1); // Convert to Fahrenheit
+      }
+      return 21; // Celsius
+    },
+    formattedWindSpeed() {
+      if (this.measurementUnit === 'imperial') {
+        return (1 * 0.621371).toFixed(1) + ' mph'; // Convert km/h to mph
+      }
+      return '1 km/h'; // Metric
+    }
+  },
   methods: {
     toggleTab(tab) {
       this.activeTab = tab;
     },
-  },
+    toggleDropdown() {
+      this.dropdownVisible = !this.dropdownVisible;
+    },
+    updateTemperatureUnit(unit) {
+      this.temperatureUnit = unit;
+    },
+    updateMeasurementUnit(unit) {
+      this.measurementUnit = unit;
+    }
+  }
 };
 </script>
 
-<style src="./WeatherCard.css"></style>
+<style scoped src="./WeatherCard.css" >
+
+</style>

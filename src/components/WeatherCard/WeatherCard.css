@@ -2,7 +2,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto:wght@400;500&display=swap');
 
 .weather-card {
-  width: 702px;
+  width: 100%;
+  max-width: 702px;
   height: auto;
   background: white;
   border-radius: 20px;
@@ -12,13 +13,12 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  overflow: hidden; /* Prevent overflow of the card */
+  overflow: hidden;
+  position: relative;
 }
 
 @media (max-width: 768px) {
   .weather-card {
-    width: 100%;
-    max-width: 90%;
     padding: 15px;
   }
 }
@@ -210,7 +210,7 @@
 
 .forecast-content {
   display: flex;
-  overflow-x: auto; /* Enable horizontal scroll */
+  overflow-x: auto;
   margin-bottom: 20px;
 }
 
@@ -255,4 +255,61 @@
     width: 30px;
     height: 30px;
   }  
+}
+
+.settings-dropdown {
+  background: #f7fafc;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  right: 20px;
+  top: 60px;
+  z-index: 10;
+  width: 250px;
+  padding: 15px;
+}
+
+.dropdown-block {
+  margin-bottom: 15px;
+}
+
+.block-header {
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.tab:hover {
+  background-color: #edf2f7;
+}
+
+.tab.active {
+  background-color: #4f46e5;
+  color: white;
+  font-weight: bold;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.2s;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
