@@ -62,11 +62,23 @@
 </div>
 
 
-    <div class="aqi">
-      AQI
-      <div class="aqi-bar" style="width: 50%;"></div>
-      300
+<div class="aqi">
+  <div class="aqi-top">
+    <span class="aqi-text">AQI</span>
+    <div class="aqi-number-container">
+      <span class="aqi-number">300</span>
+      <i class="fas fa-exclamation-triangle aqi-icon"></i>
+
     </div>
+  </div>
+  <div class="aqi-bar-container">
+    <div class="aqi-bar" style="width: 50%;"></div>
+  </div>
+</div>
+
+
+
+
     <div class="forecast-tabs">
       <div class="tab" :class="{ active: activeTab === 'hourly' }" @click="toggleTab('hourly')">Hourly Forecast</div>
       <div class="tab" :class="{ active: activeTab === 'daily' }" @click="toggleTab('daily')">7-Day Forecast</div>
@@ -91,10 +103,7 @@
 
 <script>
 import settingsIcon from '@/assets/settings-4-fill.svg';
-import humadityIcon from '@/assets/a.svg';
-import windIcon from '@/assets/b.svg';
-import precipitationIcon from '@/assets/c.svg';
-import aqiIcon from '@/assets/d.svg';
+import infoIcon from '@/assets/exclamation-circle-svgrepo-com.svg'; 
 export default {
   data() {
     return {

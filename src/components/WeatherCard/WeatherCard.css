@@ -11,7 +11,7 @@
   font-family: 'Roboto', sans-serif;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Distribute content */
+  justify-content: space-between;
 }
 
 @media (max-width: 768px) {
@@ -43,12 +43,12 @@
   width: 30px;
   height: 30px;
   cursor: pointer;
+  transition: transform 0.3s ease;
 }
 
 .settings-icon {
   width: 18px;
   height: 18px;
-  transition: transform 0.3s ease;
 }
 
 .icon-container:hover {
@@ -80,12 +80,6 @@
   align-items: center;
 }
 
-.temperature img {
-  width: 50px;
-  height: 50px;
-  margin-right: 15px;
-}
-
 .temp-degree {
   font-size: 2.5rem;
 }
@@ -109,85 +103,114 @@
 }
 
 .conditions {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 equal columns */
-    gap: 20px; /* Space between each condition */
-    font-size: 1.1rem;
-    margin-bottom: 15px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+}
+
+.condition {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.condition-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.condition-name {
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+.condition-right {
+  text-align: right;
+}
+
+.condition-value {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+@media (max-width: 1024px) {
+  .conditions {
+    grid-template-columns: 1fr;
   }
-  
+}
+
+@media (max-width: 768px) {
   .condition {
-    display: flex;
-    justify-content: space-between; /* Space between the left and right sections */
-    align-items: center;
-  }
-  
-  .condition-left {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Space between the icon and the name */
-  }
-  
-  .condition img {
-    width: 30px; /* Icon size */
-    height: 30px; /* Icon size */
-  }
-  
-  .condition-name {
     font-size: 1rem;
-    color: #6b7280; /* Light gray for the label */
   }
-  
-  .condition-right {
-    text-align: right; /* Align value to the right */
+
+  .condition-name {
+    font-size: 0.9rem;
   }
-  
+
   .condition-value {
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #333; /* Dark color for the value */
+    font-size: 1rem;
   }
-  
-  /* Responsiveness for medium screens */
-  @media (max-width: 1024px) {
-    .conditions {
-      grid-template-columns: 1fr; /* 1 column on smaller screens */
-    }
+
+  .condition img {
+    width: 24px;
+    height: 24px;
   }
-  
-  @media (max-width: 768px) {
-    .condition {
-      font-size: 1rem; /* Slightly smaller font on mobile */
-    }
-  
-    .condition-name {
-      font-size: 0.9rem;
-    }
-  
-    .condition-value {
-      font-size: 1rem;
-    }
-  
-    .condition img {
-      width: 24px; /* Resize icons for smaller screens */
-      height: 24px;
-    }
-  }
-  
+}
 
 .aqi {
   display: flex;
-  align-items: center;
-  color: #f87171;
+  flex-direction: column;
+  width: 100%;
+  align-items: flex-start;
   font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.aqi-top {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.aqi-text {
+  font-weight: bold;
+  color: #6b7280;
+}
+
+.aqi-number-container {
+  display: flex;
+  align-items: center;
+}
+
+.aqi-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-right: 5px;
+}
+
+.aqi-bar-container {
+  width: 100%;
 }
 
 .aqi-bar {
   height: 6px;
   background-color: #f87171;
   border-radius: 3px;
-  margin-left: 8px;
-  flex-grow: 1;
+  width: 100%;
+}
+
+.aqi-icon {
+  width: 20px;
+  height: 20px;
+  color: #6b7280;
 }
 
 .forecast-tabs {
