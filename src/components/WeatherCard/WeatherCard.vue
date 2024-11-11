@@ -117,7 +117,7 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      cityName: 'Casablanca',
+      cityName: 'London', // Default to London
       activeTab: 'hourly',
       dropdownVisible: false,
       temperatureUnit: 'C', // Default to Celsius
@@ -164,13 +164,18 @@ export default {
     },
     getLocation() {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-          this.fetchWeatherData(position.coords.latitude, position.coords.longitude);
-        }, () => {
-          this.fetchWeatherDataByCity(this.cityName); // Fallback to default city
-        });
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            this.fetchWeatherData(position.coords.latitude, position.coords.longitude);
+          },
+          error => {
+            console.error('Geolocation error:', error);
+            this.fetchWeatherDataByCity(this.cityName); // Fallback to London
+          }
+        );
       } else {
-        this.fetchWeatherDataByCity(this.cityName); // Fallback to default city
+        console.error('Geolocation not supported');
+        this.fetchWeatherDataByCity(this.cityName); // Fallback to London
       }
     },
     fetchWeatherData(lat, lon) {
@@ -195,50 +200,34 @@ export default {
       this.cityName = data.name;
       this.weatherDescription = data.weather[0].description;
       this.weatherIcon = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
-      this.hourlyForecast = [{ time: 'Now', temp: data.main.temp, feels_like: data.main.feels_like }];
+      
+      // Fake hourly forecast data
+      this.hourlyForecast = [
+        { time: 'Now', temp: data.main.temp, feels_like: data.main.feels_like, icon: this.weatherIcon },
+        { time: '1 PM', temp: data.main.temp + 1, icon: this.weatherIcon },
+        { time: '2 PM', temp: data.main.temp + 2, icon: this.weatherIcon },
+        { time: '3 PM', temp: data.main.temp + 3, icon: this.weatherIcon },
+      ];
+
+      // Fake daily forecast data
+      this.dailyForecast = [
+        { date: 'Tomorrow', temp: data.main.temp + 2, icon: this.weatherIcon },
+        { date: 'Day 3', temp: data.main.temp + 3, icon: this.weatherIcon },
+        { date: 'Day 4', temp: data.main.temp + 1, icon: this.weatherIcon },
+        { date: 'Day 5', temp: data.main.temp, icon: this.weatherIcon },
+      ];
+
       this.weatherConditions = [
         { name: 'Humidity', value: `${data.main.humidity}%`, icon: 'https://img.icons8.com/ios/50/000000/humidity.png' },
         { name: 'Wind', value: `${data.wind.speed} m/s`, icon: 'https://img.icons8.com/ios/50/000000/wind.png' },
         { name: 'Precipitation', value: '15%', icon: 'https://img.icons8.com/ios/50/000000/rain.png' },
         { name: 'AQI', value: this.aqi, icon: 'https://img.icons8.com/ios/50/000000/air-quality.png' }
       ];
-      this.aqi = 300; // Placeholder, update with actual AQI data if available
+      
+      // Placeholder for AQI data
+      this.aqi = 300; // Update with actual AQI data if available
       this.aqiPercentage = Math.min(this.aqi / 500 * 100, 100); // Example calculation for AQI bar
     },
-    updateWeatherData(data) {
-    this.cityName = data.name;
-    this.weatherDescription = data.weather[0].description;
-    this.weatherIcon = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
-    
-    // Fake hourly forecast data
-    this.hourlyForecast = [
-      { time: 'Now', temp: data.main.temp, feels_like: data.main.feels_like, icon: this.weatherIcon },
-      { time: '1 PM', temp: data.main.temp + 1, icon: this.weatherIcon },
-      { time: '2 PM', temp: data.main.temp + 2, icon: this.weatherIcon },
-      { time: '3 PM', temp: data.main.temp + 3, icon: this.weatherIcon },
-      // Add more hours as needed
-    ];
-
-    // Fake daily forecast data
-    this.dailyForecast = [
-      { date: 'Tomorrow', temp: data.main.temp + 2, icon: this.weatherIcon },
-      { date: 'Day 3', temp: data.main.temp + 3, icon: this.weatherIcon },
-      { date: 'Day 4', temp: data.main.temp + 1, icon: this.weatherIcon },
-      { date: 'Day 5', temp: data.main.temp, icon: this.weatherIcon },
-     
-    ];
-
-    this.weatherConditions = [
-      { name: 'Humidity', value: `${data.main.humidity}%`, icon: 'https://img.icons8.com/ios/50/000000/humidity.png' },
-      { name: 'Wind', value: `${data.wind.speed} m/s`, icon: 'https://img.icons8.com/ios/50/000000/wind.png' },
-      { name: 'Precipitation', value: '15%', icon: 'https://img.icons8.com/ios/50/000000/rain.png' },
-      { name: 'AQI', value: this.aqi, icon: 'https://img.icons8.com/ios/50/000000/air-quality.png' }
-    ];
-    
-    // Placeholder for AQI data
-    this.aqi = 300; // Placeholder, update with actual AQI data if available
-    this.aqiPercentage = Math.min(this.aqi / 500 * 100, 100); // Example calculation for AQI bar
-  },
   },
   mounted() {
     this.getLocation();
