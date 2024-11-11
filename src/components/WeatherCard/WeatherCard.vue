@@ -131,6 +131,8 @@ export default {
       aqi: 0,
       aqiPercentage: 0,
       settingsIcon,
+      lat: null,
+      lon: null,
     };
   },
   computed: {
@@ -164,10 +166,21 @@ export default {
       this.measurementUnit = unit;
     },
     getLocation() {
-      if (navigator.geolocation) {
+      const storedLat = localStorage.getItem('lat');
+      const storedLon = localStorage.getItem('lon');
+
+      if (storedLat && storedLon) {
+        this.lat = parseFloat(storedLat);
+        this.lon = parseFloat(storedLon);
+        this.fetchWeatherData(this.lat, this.lon);
+      } else if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           position => {
-            this.fetchWeatherData(position.coords.latitude, position.coords.longitude);
+            this.lat = position.coords.latitude;
+            this.lon = position.coords.longitude;
+            localStorage.setItem('lat', this.lat);
+            localStorage.setItem('lon', this.lon);
+            this.fetchWeatherData(this.lat, this.lon);
           },
           error => {
             console.error('Geolocation error:', error);
@@ -222,7 +235,7 @@ export default {
         { name: 'Precipitation', value: '15%', icon: 'https://img.icons8.com/ios/50/000000/rain.png' },
         { name: 'AQI', value: this.aqi, icon: 'https://img.icons8.com/ios/50/000000/air-quality.png' }
       ];
-      
+
       // Placeholder for AQI data
       this.aqi = 300; // Update with actual AQI data if available
       this.aqiPercentage = Math.min(this.aqi / 500 * 100, 100); // Example calculation for AQI bar
