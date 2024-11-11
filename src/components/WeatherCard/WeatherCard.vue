@@ -2,7 +2,7 @@
   <div class="weather-card">
     <!-- Header Section -->
     <div class="header">
-      Casablanca
+      {{ cityName }}
       <span class="icon-container" @click="toggleDropdown">
         <img class="settings-icon" :src="settingsIcon" alt="Settings">
       </span>
@@ -43,57 +43,30 @@
 
     <!-- Date and Time -->
     <div class="date-time">
-      Friday, November 8, 2024<br>9:09 PM
+      {{ currentDateTime }}
     </div>
 
     <!-- Temperature Section -->
     <div class="temperature">
       <div class="temp-left">
-        <img src="https://img.icons8.com/ios/50/000000/partly-cloudy-day.png" alt="Weather Icon">
+        <img :src="weatherIcon" alt="Weather Icon">
         <div class="temp-degree">{{ formattedTemperature }}</div>
       </div>
       <div class="temp-info">
-        <div class="weather-description">Partly Cloudy</div>
+        <div class="weather-description">{{ weatherDescription }}</div>
         <div class="feels-like">Feels like: {{ formattedFeelsLike }}</div>
       </div>
     </div>
 
     <!-- Weather Conditions -->
     <div class="conditions">
-      <div class="condition">
+      <div class="condition" v-for="(condition, index) in weatherConditions" :key="index">
         <div class="condition-left">
-          <img src="https://img.icons8.com/ios/50/000000/humidity.png" alt="Humidity Icon">
-          <span class="condition-name">Humidity</span>
+          <img :src="condition.icon" :alt="condition.name + ' Icon'">
+          <span class="condition-name">{{ condition.name }}</span>
         </div>
         <div class="condition-right">
-          <strong class="condition-value">40%</strong>
-        </div>
-      </div>
-      <div class="condition">
-        <div class="condition-left">
-          <img src="https://img.icons8.com/ios/50/000000/wind.png" alt="Wind Icon">
-          <span class="condition-name">Wind</span>
-        </div>
-        <div class="condition-right">
-          <strong class="condition-value">{{ formattedWindSpeed }}</strong>
-        </div>
-      </div>
-      <div class="condition">
-        <div class="condition-left">
-          <img src="https://img.icons8.com/ios/50/000000/rain.png" alt="Precipitation Icon">
-          <span class="condition-name">Precipitation</span>
-        </div>
-        <div class="condition-right">
-          <strong class="condition-value">15%</strong>
-        </div>
-      </div>
-      <div class="condition">
-        <div class="condition-left">
-          <img src="https://img.icons8.com/ios/50/000000/air-quality.png" alt="AQI Icon">
-          <span class="condition-name">AQI</span>
-        </div>
-        <div class="condition-right">
-          <strong class="condition-value">141</strong>
+          <strong class="condition-value">{{ condition.value }}</strong>
         </div>
       </div>
     </div>
@@ -103,12 +76,12 @@
       <div class="aqi-top">
         <span class="aqi-text">AQI</span>
         <div class="aqi-number-container">
-          <span class="aqi-number">300</span>
+          <span class="aqi-number">{{ aqi }}</span>
           <i class="fas fa-exclamation-triangle aqi-icon"></i>
         </div>
       </div>
       <div class="aqi-bar-container">
-        <div class="aqi-bar" style="width: 50%;"></div>
+        <div class="aqi-bar" :style="{ width: aqiPercentage + '%' }"></div>
       </div>
     </div>
 
@@ -140,54 +113,40 @@
 
 <script>
 import settingsIcon from '@/assets/settings-4-fill.svg';
-
+import axios from 'axios';
 export default {
   data() {
     return {
+      cityName: 'Casablanca',
       activeTab: 'hourly',
       dropdownVisible: false,
       temperatureUnit: 'C', // Default to Celsius
       measurementUnit: 'metric', // Default to Metric
-      hourlyForecast: [
-        { time: '9:00', icon: 'https://img.icons8.com/ios/24/000000/partly-cloudy-day.png', temp: 19 },
-        { time: '10:00', icon: 'https://img.icons8.com/ios/24/000000/sun.png', temp: 21 },
-        { time: '11:00', icon: 'https://img.icons8.com/ios/24/000000/partly-cloudy-day.png', temp: 22 },
-        { time: '12:00', icon: 'https://img.icons8.com/ios/24/000000/rain.png', temp: 22 },
-        { time: '13:00', icon: 'https://img.icons8.com/ios/24/000000/partly-cloudy-day.png', temp: 22 },
-        { time: '14:00', icon: 'https://img.icons8.com/ios/24/000000/sun.png', temp: 23 },
-        { time: '15:00', icon: 'https://img.icons8.com/ios/24/000000/sun.png', temp: 23 },
-        { time: '16:00', icon: 'https://img.icons8.com/ios/24/000000/partly-cloudy-day.png', temp: 21 },
-      ],
-      dailyForecast: [
-        { date: 'Mon, Nov 10', icon: 'https://img.icons8.com/ios/50/000000/partly-cloudy-day.png', temp: 22 },
-        { date: 'Tue, Nov 11', icon: 'https://img.icons8.com/ios/50/000000/sun.png', temp: 24 },
-        { date: 'Wed, Nov 12', icon: 'https://img.icons8.com/ios/50/000000/partly-cloudy-day.png', temp: 23 },
-        { date: 'Thu, Nov 13', icon: 'https://img.icons8.com/ios/50/000000/rain.png', temp: 21 },
-        { date: 'Fri, Nov 14', icon: 'https://img.icons8.com/ios/50/000000/sun.png', temp: 25 },
-        { date: 'Sat, Nov 15', icon: 'https://img.icons8.com/ios/50/000000/partly-cloudy-day.png', temp: 22 },
-        { date: 'Sun, Nov 16', icon: 'https://img.icons8.com/ios/50/000000/sun.png', temp: 26 },
-      ],
+      hourlyForecast: [],
+      dailyForecast: [],
+      weatherConditions: [],
+      weatherIcon: '',
+      weatherDescription: '',
+      aqi: 0,
+      aqiPercentage: 0,
       settingsIcon,
     };
   },
   computed: {
     formattedTemperature() {
-      if (this.temperatureUnit === 'F') {
-        return (this.hourlyForecast[0].temp * 9 / 5 + 32).toFixed(1); // Convert to Fahrenheit
-      }
-      return this.hourlyForecast[0].temp; // Celsius
+      const temp = this.temperatureUnit === 'F'
+        ? (this.hourlyForecast[0]?.temp * 9 / 5 + 32).toFixed(1)
+        : this.hourlyForecast[0]?.temp;
+      return temp || 'N/A';
     },
     formattedFeelsLike() {
-      if (this.temperatureUnit === 'F') {
-        return (21 * 9 / 5 + 32).toFixed(1); // Convert to Fahrenheit
-      }
-      return 21; // Celsius
+      const feelsLike = this.temperatureUnit === 'F'
+        ? (this.hourlyForecast[0]?.feels_like * 9 / 5 + 32).toFixed(1)
+        : this.hourlyForecast[0]?.feels_like;
+      return feelsLike || 'N/A';
     },
-    formattedWindSpeed() {
-      if (this.measurementUnit === 'imperial') {
-        return (1 * 0.621371).toFixed(1) + ' mph'; // Convert km/h to mph
-      }
-      return '1 km/h'; // Metric
+    currentDateTime() {
+      return new Date().toLocaleString(); // Adjust format as needed
     }
   },
   methods: {
@@ -202,11 +161,89 @@ export default {
     },
     updateMeasurementUnit(unit) {
       this.measurementUnit = unit;
-    }
+    },
+    getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          this.fetchWeatherData(position.coords.latitude, position.coords.longitude);
+        }, () => {
+          this.fetchWeatherDataByCity(this.cityName); // Fallback to default city
+        });
+      } else {
+        this.fetchWeatherDataByCity(this.cityName); // Fallback to default city
+      }
+    },
+    fetchWeatherData(lat, lon) {
+      const apiKey = '7c99ecd935038b5e95b2b9f833a4ce57'; // Replace with your OpenWeatherMap API key
+      fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`)
+        .then(response => response.json())
+        .then(data => {
+          this.updateWeatherData(data);
+        })
+        .catch(error => console.error('Error fetching weather data:', error));
+    },
+    fetchWeatherDataByCity(city) {
+      const apiKey = '948c50cf7336500ff42910cfe91fcdb3'; // Replace with your OpenWeatherMap API key
+      fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
+        .then(response => response.json())
+        .then(data => {
+          this.updateWeatherData(data);
+        })
+        .catch(error => console.error('Error fetching weather data by city:', error));
+    },
+    updateWeatherData(data) {
+      this.cityName = data.name;
+      this.weatherDescription = data.weather[0].description;
+      this.weatherIcon = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+      this.hourlyForecast = [{ time: 'Now', temp: data.main.temp, feels_like: data.main.feels_like }];
+      this.weatherConditions = [
+        { name: 'Humidity', value: `${data.main.humidity}%`, icon: 'https://img.icons8.com/ios/50/000000/humidity.png' },
+        { name: 'Wind', value: `${data.wind.speed} m/s`, icon: 'https://img.icons8.com/ios/50/000000/wind.png' },
+        { name: 'Precipitation', value: '15%', icon: 'https://img.icons8.com/ios/50/000000/rain.png' },
+        { name: 'AQI', value: this.aqi, icon: 'https://img.icons8.com/ios/50/000000/air-quality.png' }
+      ];
+      this.aqi = 300; // Placeholder, update with actual AQI data if available
+      this.aqiPercentage = Math.min(this.aqi / 500 * 100, 100); // Example calculation for AQI bar
+    },
+    updateWeatherData(data) {
+    this.cityName = data.name;
+    this.weatherDescription = data.weather[0].description;
+    this.weatherIcon = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+    
+    // Fake hourly forecast data
+    this.hourlyForecast = [
+      { time: 'Now', temp: data.main.temp, feels_like: data.main.feels_like, icon: this.weatherIcon },
+      { time: '1 PM', temp: data.main.temp + 1, icon: this.weatherIcon },
+      { time: '2 PM', temp: data.main.temp + 2, icon: this.weatherIcon },
+      { time: '3 PM', temp: data.main.temp + 3, icon: this.weatherIcon },
+      // Add more hours as needed
+    ];
+
+    // Fake daily forecast data
+    this.dailyForecast = [
+      { date: 'Tomorrow', temp: data.main.temp + 2, icon: this.weatherIcon },
+      { date: 'Day 3', temp: data.main.temp + 3, icon: this.weatherIcon },
+      { date: 'Day 4', temp: data.main.temp + 1, icon: this.weatherIcon },
+      { date: 'Day 5', temp: data.main.temp, icon: this.weatherIcon },
+     
+    ];
+
+    this.weatherConditions = [
+      { name: 'Humidity', value: `${data.main.humidity}%`, icon: 'https://img.icons8.com/ios/50/000000/humidity.png' },
+      { name: 'Wind', value: `${data.wind.speed} m/s`, icon: 'https://img.icons8.com/ios/50/000000/wind.png' },
+      { name: 'Precipitation', value: '15%', icon: 'https://img.icons8.com/ios/50/000000/rain.png' },
+      { name: 'AQI', value: this.aqi, icon: 'https://img.icons8.com/ios/50/000000/air-quality.png' }
+    ];
+    
+    // Placeholder for AQI data
+    this.aqi = 300; // Placeholder, update with actual AQI data if available
+    this.aqiPercentage = Math.min(this.aqi / 500 * 100, 100); // Example calculation for AQI bar
+  },
+  },
+  mounted() {
+    this.getLocation();
   }
 };
 </script>
 
-<style scoped src="./WeatherCard.css" >
-
-</style>
+<style scoped src="./WeatherCard.css"></style>
