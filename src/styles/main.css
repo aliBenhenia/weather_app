@@ -1,0 +1,15 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f5f7fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  @media (max-width: 600px) {
+    .weather-card {
+      width: 90%;
+    }
+  }
