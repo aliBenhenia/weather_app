@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiKey = '7c99ecd935038b5e95b2b9f833a4ce57'; 
+const apiKey = '7c99ecd935038b5e95b2b9f833a4ce57'; // should be stored in .env file(here for simplicity) and used as process.env.API_KEY 
 
 export const fetchWeatherDataByCoordinates = async (lat: number, lon: number) => {
   try {

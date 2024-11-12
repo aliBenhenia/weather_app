@@ -1,12 +1,7 @@
 <template>
   <div class="weather-card">
-    <header class="card-header">
-      <h1>{{ cityName }}</h1>
-      <p class="date-time">{{ currentDateTime }}</p>
-      <button class="settings-button" @click="toggleDropdown" aria-label="Settings">
-        <i class="fas fa-cog"></i>
-      </button>
-    </header>
+    <CardHeader :cityName="cityName" :currentDateTime="currentDateTime" :toggleDropdown="toggleDropdown" />
+
     <transition name="fade">
       <div v-if="dropdownVisible" class="settings-dropdown">
         <div class="settings-group">
@@ -33,17 +28,7 @@
         </div>
       </div>
     </transition>
-
-    <div class="current-weather">
-      <div class="temperature-display">
-        <i :class="weatherIcon"></i>
-        <span class="current-temp">{{ formattedTemperature }}</span>
-      </div>
-      <div class="weather-info">
-        <p class="weather-description">{{ weatherDescription }}</p>
-        <p class="feels-like">Feels like {{ formattedFeelsLike }}</p>
-      </div>
-    </div>
+    <CurrentWeather :weatherIcon="weatherIcon" :formattedTemperature="formattedTemperature" :weatherDescription="weatherDescription" :formattedFeelsLike="formattedFeelsLike" />
 
     <div class="weather-metrics">
       <div class="metric" v-for="(condition, index) in weatherConditions" :key="index">
@@ -52,19 +37,7 @@
         <span class="metric-value">{{ condition.value }}</span>
       </div>
     </div>
-
-    <div class="aqi-section">
-      <div class="aqi-header">
-        <span>AQI</span>
-        <span>{{ aqi }}</span>
-        <span>300
-          <i class="fas fa-info-circle"></i>
-        </span>
-      </div>
-      <div class="aqi-bar">
-        <div class="aqi-progress" :style="{ width: `${aqiPercentage}%` }"></div>
-      </div>
-    </div>
+    <AqiSection :aqi="aqi" :aqiPercentage="aqiPercentage" />
 
     <div class="forecast-section">
       <div class="forecast-tabs">
@@ -81,23 +54,8 @@
           7-Day Forecast
         </button>
       </div>
+      <ForecastContent :activeTab="activeTab" :hourlyForecast="hourlyForecast" :dailyForecast="dailyForecast" />
 
-      <div class="forecast-content" :class="activeTab">
-        <div v-if="activeTab === 'hourly'" class="forecast-scroll">
-          <div v-for="(hour, index) in hourlyForecast" :key="index" class="forecast-item">
-            <span class="forecast-time">{{ hour.time }}</span>
-            <i :class="hour.icon"></i>
-            <span class="forecast-temp">{{ hour.temp }}°</span>
-          </div>
-        </div>
-        <div v-if="activeTab === 'daily'" class="forecast-scroll">
-          <div v-for="(day, index) in dailyForecast" :key="index" class="forecast-item">
-            <span class="forecast-day">{{ day.date }}</span>
-            <i :class="day.icon"></i>
-            <span class="forecast-temp">{{ day.temp }}°</span>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -106,8 +64,18 @@
 <script lang="ts">
 import settingsIcon from '@/assets/settings-4-fill.svg';
 import { fetchWeatherDataByCoordinates, fetchWeatherDataByCity } from '@/services/weatherService';
-
+import CardHeader from './CardHeader.vue';
+import CurrentWeather from './CurrentWeather.vue';
+import AqiSection from './AqiSection.vue';
+import ForecastContent from './ForecastContent.vue';
 export default {
+  components: {
+    CardHeader,
+    CurrentWeather,
+    AqiSection,
+    ForecastContent
+   
+  },
   data() {
     return {
       cityName: 'London', 
@@ -240,10 +208,26 @@ export default {
   ];
 
   this.weatherConditions = [
-    { name: 'Humidity', value: `${data.main.humidity}%`, icon: 'https://img.icons8.com/ios/50/000000/humidity.png' },
-    { name: 'Wind', value: `${data.wind.speed} m/s`, icon: 'https://img.icons8.com/ios/50/000000/wind.png' },
-    { name: 'Precipitation', value: '15%', icon: 'https://img.icons8.com/ios/50/000000/rain.png' },
-    { name: 'AQI', value: this.aqi.toString(), icon: 'https://img.icons8.com/ios/50/000000/air-quality.png' }
+  {
+        name: 'Humidity',
+        value: `${data.main.humidity}%`,
+        icon: 'fas fa-tint' 
+      },
+      {
+        name: 'Wind',
+        value: `${data.wind.speed} m/s`,
+        icon: 'fas fa-wind'
+      },
+      {
+        name: 'Precipitation',
+        value: '15%',
+        icon: 'fas fa-cloud-rain' 
+      },
+      {
+        name: 'AQI',
+        value: this.aqi.toString(),
+        icon: 'fas fa-smog' 
+      }
   ];
 
   this.aqi = 300;
