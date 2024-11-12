@@ -7,7 +7,6 @@
         <i class="fas fa-cog"></i>
       </button>
     </header>
-
     <transition name="fade">
       <div v-if="dropdownVisible" class="settings-dropdown">
         <div class="settings-group">

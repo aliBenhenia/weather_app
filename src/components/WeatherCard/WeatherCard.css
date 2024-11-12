@@ -85,7 +85,7 @@ h1 {
   flex: 1;
   padding: 8px 12px;
   border: none;
-  background: none;
+  background: white;
   font-size: 14px;
   color: #6b7280;
   cursor: pointer;
@@ -93,7 +93,7 @@ h1 {
 }
 
 .settings-options button.active {
-  background: white;
+  background: #f3f4f6;
   color: #111827;
   font-weight: 500;
 }
@@ -208,7 +208,7 @@ h1 {
   flex: 1;
   padding: 12px;
   border: none;
-  background: none;
+  background: white;
   font-size: 16px;
   color: #6b7280;
   cursor: pointer;
@@ -216,7 +216,7 @@ h1 {
 }
 
 .forecast-tabs button.active {
-  background: white;
+  background: #f3f4f6;
   color: #111827;
   font-weight: 500;
 }
