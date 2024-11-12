@@ -54,8 +54,8 @@ h1 {
 
 .settings-dropdown {
   position: absolute;
-  top: 48px;
-  right: 0;
+  top: 12%;
+  right: 6.7%;
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
