@@ -1,114 +1,106 @@
 <template>
   <div class="weather-card">
-    <div class="header">
-      {{ cityName }}
-      <span class="icon-container" @click="toggleDropdown">
-        <img class="settings-icon" :src="settingsIcon" alt="Settings">
-      </span>
-    </div>
+    <header class="card-header">
+      <h1>{{ cityName }}</h1>
+      <p class="date-time">{{ currentDateTime }}</p>
+      <button class="settings-button" @click="toggleDropdown" aria-label="Settings">
+        <i class="fas fa-cog"></i>
+      </button>
+    </header>
 
     <transition name="fade">
       <div v-if="dropdownVisible" class="settings-dropdown">
-        <div class="dropdown-block">
-          <div class="block-header">Temperature</div>
-          <div class="tabs">
-            <div 
-              class="tab" 
+        <div class="settings-group">
+          <h3>Temperature</h3>
+          <div class="settings-options">
+            <button 
               :class="{ active: temperatureUnit === 'C' }" 
-              @click="updateTemperatureUnit('C')">°C</div>
-            <div 
-              class="tab" 
+              @click="updateTemperatureUnit('C')">°C</button>
+            <button 
               :class="{ active: temperatureUnit === 'F' }" 
-              @click="updateTemperatureUnit('F')">°F</div>
+              @click="updateTemperatureUnit('F')">°F</button>
           </div>
         </div>
-
-        <div class="dropdown-block">
-          <div class="block-header">Measurement</div>
-          <div class="tabs">
-            <div 
-              class="tab" 
+        <div class="settings-group">
+          <h3>Measurement</h3>
+          <div class="settings-options">
+            <button 
               :class="{ active: measurementUnit === 'metric' }" 
-              @click="updateMeasurementUnit('metric')">Metric</div>
-            <div 
-              class="tab" 
+              @click="updateMeasurementUnit('metric')">Metric</button>
+            <button 
               :class="{ active: measurementUnit === 'imperial' }" 
-              @click="updateMeasurementUnit('imperial')">Imperial</div>
+              @click="updateMeasurementUnit('imperial')">Imperial</button>
           </div>
         </div>
       </div>
     </transition>
 
-    <div class="date-time">
-      {{ currentDateTime }}
-    </div>
-
-    <div class="temperature">
-      <div class="temp-left">
-        <!-- <img :src="weatherIcon" alt="Weather Icon"> -->
-        <li class="fas fa-cloud"></li>
-        <div class="temp-degree">{{ formattedTemperature }}</div>
+    <div class="current-weather">
+      <div class="temperature-display">
+        <i :class="weatherIcon"></i>
+        <span class="current-temp">{{ formattedTemperature }}</span>
       </div>
-      <div class="temp-info">
-        <div class="weather-description">{{ weatherDescription }}</div>
-        <div class="feels-like">Feels like: {{ formattedFeelsLike }}</div>
+      <div class="weather-info">
+        <p class="weather-description">{{ weatherDescription }}</p>
+        <p class="feels-like">Feels like {{ formattedFeelsLike }}</p>
       </div>
     </div>
 
-    <div class="conditions">
-      <div class="condition" v-for="(condition, index) in weatherConditions" :key="index">
-        <div class="condition-left">
-          <img :src="condition.icon" :alt="condition.name + ' Icon'">
-          <span class="condition-name">{{ condition.name }}</span>
+    <div class="weather-metrics">
+      <div class="metric" v-for="(condition, index) in weatherConditions" :key="index">
+        <i :class="condition.icon"></i>
+        <span class="metric-name">{{ condition.name }}</span>
+        <span class="metric-value">{{ condition.value }}</span>
+      </div>
+    </div>
+
+    <div class="aqi-section">
+      <div class="aqi-header">
+        <span>AQI</span>
+        <span>{{ aqi }}</span>
+        <span>300</span>
+      </div>
+      <div class="aqi-bar">
+        <div class="aqi-progress" :style="{ width: `${aqiPercentage}%` }"></div>
+      </div>
+    </div>
+
+    <div class="forecast-section">
+      <div class="forecast-tabs">
+        <button 
+          :class="{ active: activeTab === 'hourly' }"
+          @click="toggleTab('hourly')"
+        >
+          Hourly Forecast
+        </button>
+        <button 
+          :class="{ active: activeTab === 'daily' }"
+          @click="toggleTab('daily')"
+        >
+          7-Day Forecast
+        </button>
+      </div>
+
+      <div class="forecast-content" :class="activeTab">
+        <div v-if="activeTab === 'hourly'" class="forecast-scroll">
+          <div v-for="(hour, index) in hourlyForecast" :key="index" class="forecast-item">
+            <span class="forecast-time">{{ hour.time }}</span>
+            <i :class="hour.icon"></i>
+            <span class="forecast-temp">{{ hour.temp }}°</span>
+          </div>
         </div>
-        <div class="condition-right">
-          <strong class="condition-value">{{ condition.value }}</strong>
+        <div v-if="activeTab === 'daily'" class="forecast-scroll">
+          <div v-for="(day, index) in dailyForecast" :key="index" class="forecast-item">
+            <span class="forecast-day">{{ day.date }}</span>
+            <i :class="day.icon"></i>
+            <span class="forecast-temp">{{ day.temp }}°</span>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div class="aqi">
-      <div class="aqi-top">
-        <span class="aqi-text">AQI</span>
-        <div class="aqi-number-container">
-          <span class="aqi-number">{{ aqi }}</span>
-          <i class="fas fa-exclamation-triangle aqi-icon"></i>
-        </div>
-      </div>
-      <div class="aqi-bar-container">
-        <div class="aqi-bar" :style="{ width: aqiPercentage + '%' }"></div>
-      </div>
-    </div>
-
-    <div class="forecast-tabs">
-      <div class="tab" :class="{ active: activeTab === 'hourly' }" @click="toggleTab('hourly')">Hourly Forecast</div>
-      <div class="tab" :class="{ active: activeTab === 'daily' }" @click="toggleTab('daily')">7-Day Forecast</div>
-    </div>
-
-    <div class="forecast-content">
-    <!-- Hourly Forecast -->
-<div class="hourly-forecast" v-if="activeTab === 'hourly'">
-  <div class="hour" v-for="(hour, index) in hourlyForecast" :key="index">
-    <div class="hour-number">{{ index + 1 }}</div>
-    <div class="hour-time">{{ hour.time }}</div>
-    <i :class="hour.icon"></i> <!-- Use Font Awesome icon for hourly forecast -->
-    <div class="hour-temp">{{ hour.temp }}°</div>
-  </div>
-</div>
-
-<!-- Daily Forecast -->
-<div class="daily-forecast" v-if="activeTab === 'daily'">
-  <div class="day" v-for="(day, index) in dailyForecast" :key="index">
-    <div class="day-number">{{ index + 1 }}</div>
-    <div class="day-date">{{ day.date }}</div>
-    <i :class="day.icon"></i> <!-- Use Font Awesome icon for daily forecast -->
-    <div class="day-temp">{{ day.temp }}°</div>
-  </div>
-</div>
-
     </div>
   </div>
 </template>
+
 
 <script lang="ts">
 import settingsIcon from '@/assets/settings-4-fill.svg';
@@ -139,13 +131,13 @@ export default {
       const temp = this.temperatureUnit === 'F'
         ? (this.hourlyForecast[0]?.temp * 9 / 5 + 32).toFixed(1)
         : this.hourlyForecast[0]?.temp;
-      return temp || 'N/A';
+      return String(temp) || 'N/A';
     },
     formattedFeelsLike(): string {
       const feelsLike = this.temperatureUnit === 'F'
-        ? (this.hourlyForecast[0]?.feels_like * 9 / 5 + 32).toFixed(1)
+        ? (this.hourlyForecast[0]?.feels_like ?? 0 * 9 / 5 + 32).toFixed(1)
         : this.hourlyForecast[0]?.feels_like;
-      return feelsLike || 'N/A';
+      return String(feelsLike) || 'N/A';
     },
     currentDateTime(): string {
       return new Date().toLocaleString(); 
@@ -224,13 +216,14 @@ export default {
     'haze': 'fas fa-smog',            // Haze
   };
   
-  // Extract the main weather condition description (clear, rain, etc.)
+
   const mainCondition = data.weather[0].main.toLowerCase();
+  console.log(mainCondition);
   
-  // Assign the corresponding Font Awesome icon
-  this.weatherIcon = weatherIconMap[mainCondition] || 'fas fa-cloud';  // Default to cloud icon if no match
+ 
+  this.weatherIcon = weatherIconMap[mainCondition] || 'fas fa-cloud';  
   
-  // Prepare the forecast data
+
   this.hourlyForecast = [
     { time: 'Now', temp: data.main.temp, feels_like: data.main.feels_like, icon: this.weatherIcon },
     { time: '1 PM', temp: data.main.temp + 1, icon: this.weatherIcon },
