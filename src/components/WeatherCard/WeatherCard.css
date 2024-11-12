@@ -227,6 +227,7 @@ h1 {
 
 .forecast-scroll {
   display: flex;
+  justify-content: space-between;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
