@@ -1,0 +1,12 @@
+version: '3'
+services:
+  vue-app:
+    build:
+      context: . 
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173" # Map Vite's default port 3la 9bel host
+    volumes:
+      - .:/app 
+      - /app/node_modules 
+
