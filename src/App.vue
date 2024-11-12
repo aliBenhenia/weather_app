@@ -5,7 +5,7 @@
   </template>
   
   <script>
-  import WeatherCard from './components/WeatherCard/WeatherCard.vue';
+  import WeatherCard from './components/WeatherCard.vue';
   
   export default {
     components: {

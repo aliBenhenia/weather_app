@@ -1,5 +1,5 @@
 import './styles/main.css'
-import './components/WeatherCard/WeatherCard.css'
+import './styles/WeatherCard.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 

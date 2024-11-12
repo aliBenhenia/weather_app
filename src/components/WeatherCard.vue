@@ -172,17 +172,17 @@ export default {
   this.cityName = data.name;
   this.weatherDescription = data.weather[0].description;
   
-  // Map weather conditions to Font Awesome icons
+
   const weatherIconMap: Record<string, string> = {
-    'clear': 'fas fa-sun',            // Clear sky
-    'clouds': 'fas fa-cloud',         // Clouds
-    'rain': 'fas fa-cloud-showers-heavy', // Rain
-    'drizzle': 'fas fa-cloud-rain',   // Drizzle
-    'thunderstorm': 'fas fa-bolt',    // Thunderstorm
-    'snow': 'fas fa-snowflake',       // Snow
-    'mist': 'fas fa-smog',            // Mist
-    'fog': 'fas fa-smog',             // Fog
-    'haze': 'fas fa-smog',            // Haze
+    'clear': 'fas fa-sun',            
+    'clouds': 'fas fa-cloud',        
+    'rain': 'fas fa-cloud-showers-heavy', 
+    'drizzle': 'fas fa-cloud-rain',   
+    'thunderstorm': 'fas fa-bolt',    
+    'snow': 'fas fa-snowflake',       
+    'mist': 'fas fa-smog',           
+    'fog': 'fas fa-smog',             
+    'haze': 'fas fa-smog',            
   };
   
 
@@ -240,5 +240,3 @@ export default {
   }
 };
 </script>
-
-<style scoped src="./WeatherCard.css"></style>
