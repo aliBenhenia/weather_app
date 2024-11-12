@@ -1,39 +1,30 @@
-# my-vue-app
+# Weather App
 
-This template should help get you started developing with Vue 3 in Vite.
+A responsive weather app built with **Vue 3.5**, **TypeScript**, and **Vanilla CSS**, utilizing the **OpenWeatherMap API** for  weather data, with **FontAwesome** icons for visuals. The app runs in a Dockerized environment with **Docker Compose** for easy setup.
 
-## Recommended IDE Setup
+## Stack
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- **Vue 3.5 + TypeScript**: Framework and type safety
+- **Axios**: For fetching API data
+- **FontAwesome**: Icons for weather visuals
+- **Docker Compose**: For containerized setup
 
-## Type Support for `.vue` Imports in TS
+## Features
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+- **Current Weather & AQI**: Displays temperature, AQI, and additional weather details such as humidity and wind speed.
+- **LocalStorage Geolocation**: Caches user location in **LocalStorage** to handle issues with geolocation on page refresh.
 
-## Customize configuration
+## Challenges Faced
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+- **Geolocation on Refresh**: Initial geolocation access worked but failed upon page refresh in some browsers. This was fixed by storing coordinates in **LocalStorage** to persist location data across sessions.
 
-## Project Setup
+## Running the App
 
-```sh
-npm install
-```
+1. **Run with Docker Compose**:
 
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+   ```bash
+   docker-compose up --build
+2. **or manual install** :
+    ```bash
+        npm i
+        npm run dev
