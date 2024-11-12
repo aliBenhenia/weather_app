@@ -58,7 +58,9 @@
       <div class="aqi-header">
         <span>AQI</span>
         <span>{{ aqi }}</span>
-        <span>300</span>
+        <span>300
+          <i class="fas fa-info-circle"></i>
+        </span>
       </div>
       <div class="aqi-bar">
         <div class="aqi-progress" :style="{ width: `${aqiPercentage}%` }"></div>
