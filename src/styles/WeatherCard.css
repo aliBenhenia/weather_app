@@ -1,7 +1,4 @@
-/* Import Font */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-
-/* General Styles */
 .weather-card {
     font-family: 'Inter', sans-serif;
     width: 702px;
@@ -15,6 +12,13 @@
     overflow: hidden;
 }
 
+.card-header {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin-bottom: 24px;
+}
+
 h1 {
     font-size: 40px;
     font-weight: 700;
@@ -23,26 +27,17 @@ h1 {
 }
 
 .date-time, .time {
-    font-size: 16px;
-    color: #6b7280;
-    margin: 4px 0 0;
-    font-weight: 500;
+  font-size: 16px;
+  color: #6b7280;
+  margin: 4px 0 0;
+  font-weight: 500;
 }
 
 .time {
-    font-size: 14px;
-    margin-top: 10px;
+  font-size: 14px;
+  margin-top: 10px;
 }
 
-/* Header */
-.card-header {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    margin-bottom: 24px;
-}
-
-/* Settings Button */
 .settings-button {
     position: absolute;
     top: 0;
@@ -59,7 +54,6 @@ h1 {
     cursor: pointer;
     transition: all 0.2s ease;
 }
-
 .settings-button img {
     width: 20px;
     height: 20px;
@@ -69,7 +63,6 @@ h1 {
     border: 1px solid black;
 }
 
-/* Settings Dropdown */
 .settings-dropdown {
     position: absolute;
     top: 12%;
@@ -83,9 +76,9 @@ h1 {
     border: .2px solid black;
     height: 180px;
     padding-bottom: 55px;
+
 }
 
-/* Settings Options */
 .settings-group {
     margin-bottom: 16px;
 }
@@ -117,6 +110,7 @@ h1 {
     cursor: pointer;
     transition: all 0.2s ease;
     background: var(--bg-weak-50, #F5F7FA);
+   
 }
 
 .settings-options button.active {
@@ -127,7 +121,6 @@ h1 {
     background: white; 
 }
 
-/* Weather Display */
 .current-weather {
     display: flex;
     align-items: center;
@@ -171,14 +164,19 @@ h1 {
     margin: 4px 0 0;
 }
 
-/* Weather Metrics */
 .weather-metrics {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 14px 54px; 
-    margin-bottom: 32px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 14px 54px; 
+  margin-bottom: 32px;
+  
 }
 
+@media (max-width: 640px) {
+  .weather-metrics {
+    grid-template-columns: 1fr !important; 
+  }
+}
 .metric {
     display: flex;
     align-items: center;
@@ -203,7 +201,8 @@ h1 {
     margin-left: auto;
 }
 
-/* Forecast Tabs */
+
+
 .forecast-tabs {
     display: flex;
     background: #f3f4f6;
@@ -212,7 +211,7 @@ h1 {
     background: var(--bg-weak-50, #F5F7FA);
     border-radius: 10px;
     padding: 4px;
-    height: 36px;
+    height: 36px;;
 }
 
 .forecast-tabs button {
@@ -232,7 +231,8 @@ h1 {
     font-weight: 500;
 }
 
-/* Responsive Styles */
+
+/* Responsive styles */
 @media (max-width: 640px) {
     .weather-card {
         height: auto;

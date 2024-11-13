@@ -29,11 +29,13 @@
       </div>
     </transition>
 
+    <!-- Loader: Show while fetching data -->
     <div v-if="loading" class="loader">
       <p>Loading weather data...</p>
     </div>
 
     <CurrentWeather v-if="!loading" :weatherIcon="weatherIcon" :formattedTemperature="formattedTemperature" :weatherDescription="weatherDescription" :formattedFeelsLike="formattedFeelsLike" />
+
     <WeatherMetrics v-if="!loading" :weatherConditions="weatherConditions" />
     <AqiSection v-if="!loading" :aqi="aqi" :aqiPercentage="aqiPercentage" />
 
@@ -55,6 +57,7 @@
       <ForecastContent :activeTab="activeTab"  />
     </div>
 
+    <!-- Location Access Denial Notification -->
     <div v-if="locationDenied" class="location-alert">
       <div class="location-alert-content">
         <h3>Location Access Denied</h3>
@@ -84,7 +87,7 @@ export default {
   },
   data() {
     return {
-      cityName: 'London',
+      cityName: 'London', 
       activeTab: 'hourly',
       dropdownVisible: false,
       temperatureUnit: 'C',
@@ -99,8 +102,8 @@ export default {
       settingsIcon,
       lat: null as number | null,
       lon: null as number | null,
-      loading: true,
-      locationDenied: false,
+      loading: true, // Loading state
+      locationDenied: false, // Location access denial flag
     };
   },
   computed: {
@@ -156,13 +159,13 @@ export default {
           },
           error => {
             console.error('Geolocation error:', error);
-            this.locationDenied = true;
-            this.fetchWeatherDataByCity(this.cityName);
+            this.locationDenied = true; // Show error message
+            this.fetchWeatherDataByCity(this.cityName); // Fallback to default city
           }
         );
       } else {
         console.error('Geolocation not supported');
-        this.fetchWeatherDataByCity(this.cityName);
+        this.fetchWeatherDataByCity(this.cityName); // Fallback to default city
       }
     },
     async fetchWeatherData(lat: number, lon: number): Promise<void> {
@@ -224,10 +227,10 @@ export default {
         },
       ];
 
-      this.aqi = 50;
+      this.aqi = 50; // Sample AQI
       this.aqiPercentage = (this.aqi / 500) * 100;
 
-      this.loading = false;
+      this.loading = false; // Hide loader once data is fetched
     }
   },
   mounted() {
@@ -255,96 +258,35 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  max-width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
   z-index: 10;
 }
 
 .location-alert-content h3 {
+  font-size: 1.5rem;
   margin-bottom: 10px;
 }
 
+.location-alert-content p {
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
 .retry-button {
-  background-color: #4CAF50; 
-  color: white;
+  padding: 10px 20px;
+  background-color: #fff;
+  color: #f44336;
   border: none;
-  padding: 10px;
-  cursor: pointer;
   border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
 }
 
 .retry-button:hover {
-  background-color: #45a049;
-}
-
-.settings-dropdown {
-  background-color: #282828;
-  color: white;
-  padding: 10px;
-  border-radius: 8px;
-  position: absolute;
-  top: 50px;
-  right: 20px;
-  width: 200px;
-}
-
-.settings-group {
-  margin-bottom: 20px;
-}
-
-.settings-options button {
-  background-color: #333;
-  color: white;
-  border: none;
-  padding: 5px;
-  margin: 5px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.settings-options button.active {
-  background-color: #00aaff;
-}
-
-.forecast-tabs button.active {
-  background-color: #00aaff;
-}
-
-.forecast-section {
-  margin-top: 30px;
-}
-
-.forecast-tabs {
-  display: flex;
-  justify-content: center;
-}
-
-.forecast-tabs button {
-  background-color: transparent;
-  color: white;
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin: 0 10px;
-  cursor: pointer;
-}
-
-.forecast-tabs button:hover {
-  background-color: #555;
-}
-
-.weather-card {
-  background-color: #00152993;
-  color: white;
-  border-radius: 15px;
-  padding: 20px;
-}
-
-.weather-card h2 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.weather-card .weather-section {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
+  background-color: #f44336;
+  color: #fff;
 }
 </style>
