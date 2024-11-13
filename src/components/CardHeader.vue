@@ -1,12 +1,10 @@
 <template>
   <header class="card-header">
     <h1>{{ cityName }}</h1>
-    <p class="date-time">
-      {{ formattedDate }}
-    </p>
+    <p class="date-time">{{ formattedDate }}</p>
     <p class="time">{{ formattedTime }}</p> 
     <button class="settings-button" @click="toggleDropdown" aria-label="Settings">
-      <i class="fas fa-cog"></i>
+      <img src="@/assets/icons/settings-4-fill.svg" alt="Settings" width="24" height="24" />
     </button>
   </header>
 </template>
@@ -30,8 +28,6 @@ export default {
   },
   computed: {
     formattedDate() {
-      console.log(this.currentDateTime);
-      
       const date = new Date(this.currentDateTime);
       return date.toLocaleDateString("en-US", {
         weekday: "long", 

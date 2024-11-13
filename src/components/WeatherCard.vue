@@ -62,7 +62,7 @@
 
 
 <script lang="ts">
-import settingsIcon from '@/assets/settings-4-fill.svg';
+import settingsIcon from '@/assets/icons/settings-4-fill.svg';
 import { fetchWeatherDataByCoordinates, fetchWeatherDataByCity } from '@/services/weatherService';
 import CardHeader from './CardHeader.vue';
 import CurrentWeather from './CurrentWeather.vue';
