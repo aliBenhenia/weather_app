@@ -30,13 +30,14 @@
     </transition>
     <CurrentWeather :weatherIcon="weatherIcon" :formattedTemperature="formattedTemperature" :weatherDescription="weatherDescription" :formattedFeelsLike="formattedFeelsLike" />
 
-    <div class="weather-metrics">
+    <!-- <div class="weather-metrics">
       <div class="metric" v-for="(condition, index) in weatherConditions" :key="index">
         <i :class="condition.icon"></i>
         <span class="metric-name">{{ condition.name }}</span>
         <span class="metric-value">{{ condition.value }}</span>
       </div>
-    </div>
+    </div> -->
+    <WeatherMetrics :weatherConditions="weatherConditions" />
     <AqiSection :aqi="aqi" :aqiPercentage="aqiPercentage" />
 
     <div class="forecast-section">
@@ -68,12 +69,14 @@ import CardHeader from './CardHeader.vue';
 import CurrentWeather from './CurrentWeather.vue';
 import AqiSection from './AqiSection.vue';
 import ForecastContent from './ForecastContent.vue';
+import WeatherMetrics from './WeatherMetrics.vue';
 export default {
   components: {
     CardHeader,
     CurrentWeather,
     AqiSection,
-    ForecastContent
+    ForecastContent,
+    WeatherMetrics,
    
   },
   data() {
@@ -197,15 +200,16 @@ export default {
         icon: 'fas fa-tint' 
       },
       {
-        name: 'Wind',
-        value: `${data.wind.speed} m/s`,
-        icon: 'fas fa-wind'
-      },
-      {
         name: 'Precipitation',
         value: '15%',
         icon: 'fas fa-cloud-rain' 
       },
+      {
+        name: 'Wind',
+        value: `${data.wind.speed} m/s`,
+        icon: 'fas fa-wind'
+      },
+      
       {
         name: 'AQI',
         value: this.aqi.toString(),

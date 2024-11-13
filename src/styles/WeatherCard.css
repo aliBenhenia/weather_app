@@ -152,7 +152,7 @@ h1 {
 }
 
 .weather-description {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: bold;
     color: #111827;
     margin: 0;
@@ -167,8 +167,9 @@ h1 {
 .weather-metrics {
   display: grid;
   grid-template-columns: repeat(2, 1fr); 
-  gap: 16px;
+  gap: 14px 54px; 
   margin-bottom: 32px;
+  
 }
 
 @media (max-width: 640px) {
@@ -182,19 +183,20 @@ h1 {
     gap: 12px;
 }
 
-.metric i {
-    font-size: 24px;
-    color: #3b82f6;
+.metric img {
+    width: 19px;
+    height: 19px;
 }
 
 .metric-name {
-    font-size: 16px;
-    color: #6b7280;
+    font-size: 14px;
+    color: #0E121B;
+    font-weight: 500;
 }
 
 .metric-value {
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 700;
     color: #111827;
     margin-left: auto;
 }
