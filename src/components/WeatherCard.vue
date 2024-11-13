@@ -48,7 +48,7 @@
           7-Day Forecast
         </button>
       </div>
-      <ForecastContent :activeTab="activeTab" :hourlyForecast="hourlyForecast" :dailyForecast="dailyForecast" />
+      <ForecastContent :activeTab="activeTab"  />
 
     </div>
   </div>
