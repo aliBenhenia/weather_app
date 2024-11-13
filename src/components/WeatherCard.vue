@@ -171,26 +171,9 @@ export default {
     updateWeatherData(data: any): void {
   this.cityName = data.name;
   this.weatherDescription = data.weather[0].description;
-  
-
-  const weatherIconMap: Record<string, string> = {
-    'clear': 'fas fa-sun',            
-    'clouds': 'fas fa-cloud',        
-    'rain': 'fas fa-cloud-showers-heavy', 
-    'drizzle': 'fas fa-cloud-rain',   
-    'thunderstorm': 'fas fa-bolt',    
-    'snow': 'fas fa-snowflake',       
-    'mist': 'fas fa-smog',           
-    'fog': 'fas fa-smog',             
-    'haze': 'fas fa-smog',            
-  };
-  
-
   const mainCondition = data.weather[0].main.toLowerCase();
   console.log(mainCondition);
-  
- 
-  this.weatherIcon = weatherIconMap[mainCondition] || 'fas fa-cloud';  
+  this.weatherIcon = mainCondition;
   
 
   this.hourlyForecast = [
