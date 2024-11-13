@@ -201,37 +201,6 @@ h1 {
     margin-left: auto;
 }
 
-.aqi-section {
-    margin-bottom: 32px;
-}
-
-
-.aqi-header {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    font-weight: 500;
-    color: #0E121B;
-    margin-bottom: 8px;
-
-}
-.aqi-header i {
-    font-size: 12px;
-    color: #E1E4EA;
-}
-
-.aqi-bar {
-    height: 6px;
-    background: #E1E4EA;
-    border-radius: 2px;
-    overflow: hidden;
-}
-
-.aqi-progress {
-    height: 100%;
-    background: #ef4444;
-    transition: width 0.7s ease;
-}
 
 .forecast-section {
     margin-top: 32px;

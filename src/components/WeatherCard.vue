@@ -29,6 +29,7 @@
       </div>
     </transition>
     <CurrentWeather :weatherIcon="weatherIcon" :formattedTemperature="formattedTemperature" :weatherDescription="weatherDescription" :formattedFeelsLike="formattedFeelsLike" />
+
     <WeatherMetrics :weatherConditions="weatherConditions" />
     <AqiSection :aqi="aqi" :aqiPercentage="aqiPercentage" />
 
