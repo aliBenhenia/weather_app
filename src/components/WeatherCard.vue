@@ -28,12 +28,16 @@
         </div>
       </div>
     </transition>
-    <CurrentWeather :weatherIcon="weatherIcon" :formattedTemperature="formattedTemperature" :weatherDescription="weatherDescription" :formattedFeelsLike="formattedFeelsLike" />
 
-    <WeatherMetrics :weatherConditions="weatherConditions" />
-    <AqiSection :aqi="aqi" :aqiPercentage="aqiPercentage" />
+    <div v-if="loading" class="loader">
+      <p>Loading weather data...</p>
+    </div>
 
-    <div class="forecast-section">
+    <CurrentWeather v-if="!loading" :weatherIcon="weatherIcon" :formattedTemperature="formattedTemperature" :weatherDescription="weatherDescription" :formattedFeelsLike="formattedFeelsLike" />
+    <WeatherMetrics v-if="!loading" :weatherConditions="weatherConditions" />
+    <AqiSection v-if="!loading" :aqi="aqi" :aqiPercentage="aqiPercentage" />
+
+    <div v-if="!loading" class="forecast-section">
       <div class="forecast-tabs">
         <button 
           :class="{ active: activeTab === 'hourly' }"
@@ -49,11 +53,17 @@
         </button>
       </div>
       <ForecastContent :activeTab="activeTab"  />
+    </div>
 
+    <div v-if="locationDenied" class="location-alert">
+      <div class="location-alert-content">
+        <h3>Location Access Denied</h3>
+        <p>To get accurate weather information, please enable location access in your browser settings.</p>
+        <button class="retry-button" @click="requestLocationAccess">Try Again</button>
+      </div>
     </div>
   </div>
 </template>
-
 
 <script lang="ts">
 import settingsIcon from '@/assets/icons/settings-4-fill.svg';
@@ -63,6 +73,7 @@ import CurrentWeather from './CurrentWeather.vue';
 import AqiSection from './AqiSection.vue';
 import ForecastContent from './ForecastContent.vue';
 import WeatherMetrics from './WeatherMetrics.vue';
+
 export default {
   components: {
     CardHeader,
@@ -70,11 +81,10 @@ export default {
     AqiSection,
     ForecastContent,
     WeatherMetrics,
-   
   },
   data() {
     return {
-      cityName: 'London', 
+      cityName: 'London',
       activeTab: 'hourly',
       dropdownVisible: false,
       temperatureUnit: 'C',
@@ -89,6 +99,8 @@ export default {
       settingsIcon,
       lat: null as number | null,
       lon: null as number | null,
+      loading: true,
+      locationDenied: false,
     };
   },
   computed: {
@@ -121,6 +133,10 @@ export default {
     updateMeasurementUnit(unit: string): void {
       this.measurementUnit = unit;
     },
+    requestLocationAccess(): void {
+      this.locationDenied = false;
+      this.getLocation();
+    },
     getLocation(): void {
       const storedLat = localStorage.getItem('lat');
       const storedLon = localStorage.getItem('lon');
@@ -140,12 +156,13 @@ export default {
           },
           error => {
             console.error('Geolocation error:', error);
-            this.fetchWeatherDataByCity(this.cityName); 
+            this.locationDenied = true;
+            this.fetchWeatherDataByCity(this.cityName);
           }
         );
       } else {
         console.error('Geolocation not supported');
-        this.fetchWeatherDataByCity(this.cityName); 
+        this.fetchWeatherDataByCity(this.cityName);
       }
     },
     async fetchWeatherData(lat: number, lon: number): Promise<void> {
@@ -165,60 +182,169 @@ export default {
       }
     },
     updateWeatherData(data: any): void {
-  this.cityName = data.name;
-  this.weatherDescription = data.weather[0].description;
-  const mainCondition = data.weather[0].main.toLowerCase();
-  console.log(mainCondition);
-  this.weatherIcon = mainCondition;
-  
+      this.cityName = data.name;
+      this.weatherDescription = data.weather[0].description;
+      const mainCondition = data.weather[0].main.toLowerCase();
+      this.weatherIcon = mainCondition;
 
-  this.hourlyForecast = [
-    { time: 'Now', temp: data.main.temp, feels_like: data.main.feels_like, icon: this.weatherIcon },
-    { time: '1 PM', temp: data.main.temp + 1, icon: this.weatherIcon },
-    { time: '2 PM', temp: data.main.temp + 2, icon: this.weatherIcon },
-    { time: '3 PM', temp: data.main.temp + 3, icon: this.weatherIcon },
-  ];
+      this.hourlyForecast = [
+        { time: 'Now', temp: data.main.temp, feels_like: data.main.feels_like, icon: this.weatherIcon },
+        { time: '1 PM', temp: data.main.temp + 1, icon: this.weatherIcon },
+        { time: '2 PM', temp: data.main.temp + 2, icon: this.weatherIcon },
+        { time: '3 PM', temp: data.main.temp + 3, icon: this.weatherIcon },
+      ];
 
-  this.dailyForecast = [
-    { date: 'Tomorrow', temp: data.main.temp + 2, icon: this.weatherIcon },
-    { date: 'Day 3', temp: data.main.temp + 3, icon: this.weatherIcon },
-    { date: 'Day 4', temp: data.main.temp + 1, icon: this.weatherIcon },
-    { date: 'Day 5', temp: data.main.temp, icon: this.weatherIcon },
-  ];
+      this.dailyForecast = [
+        { date: 'Tomorrow', temp: data.main.temp + 2, icon: this.weatherIcon },
+        { date: 'Day 3', temp: data.main.temp + 3, icon: this.weatherIcon },
+        { date: 'Day 4', temp: data.main.temp + 1, icon: this.weatherIcon },
+        { date: 'Day 5', temp: data.main.temp, icon: this.weatherIcon },
+      ];
 
-  this.weatherConditions = [
-  {
-        name: 'Humidity',
-        value: `${data.main.humidity}%`,
-        icon: 'fas fa-tint' 
-      },
-      {
-        name: 'Precipitation',
-        value: '15%',
-        icon: 'fas fa-cloud-rain' 
-      },
-      {
-        name: 'Wind',
-        value: `${data.wind.speed} m/s`,
-        icon: 'fas fa-wind'
-      },
-      
-      {
-        name: 'AQI',
-        value: this.aqi.toString(),
-        icon: 'fas fa-smog' 
-      }
-  ];
+      this.weatherConditions = [
+        {
+          name: 'Humidity',
+          value: `${data.main.humidity}%`,
+          icon: 'fas fa-tint' 
+        },
+        {
+          name: 'Precipitation',
+          value: '15%',
+          icon: 'fas fa-cloud-rain' 
+        },
+        {
+          name: 'Wind',
+          value: `${data.wind.speed} m/s`,
+          icon: 'fas fa-wind'
+        },
+        {
+          name: 'Pressure',
+          value: `${data.main.pressure} hPa`,
+          icon: 'fas fa-tachometer-alt' 
+        },
+      ];
 
-  this.aqi = 300;
-  this.aqiPercentage = Math.min(this.aqi / 500 * 100, 100);
-}
-,
+      this.aqi = 50;
+      this.aqiPercentage = (this.aqi / 500) * 100;
+
+      this.loading = false;
+    }
   },
   mounted() {
-    this.getLocation();
+    this.getLocation(); 
   }
 };
 </script>
 
+<style scoped>
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #fff;
+  font-size: 1.5rem;
+}
 
+.location-alert {
+  background-color: #f44336; 
+  color: white;
+  border-radius: 10px;
+  padding: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+.location-alert-content h3 {
+  margin-bottom: 10px;
+}
+
+.retry-button {
+  background-color: #4CAF50; 
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.retry-button:hover {
+  background-color: #45a049;
+}
+
+.settings-dropdown {
+  background-color: #282828;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  position: absolute;
+  top: 50px;
+  right: 20px;
+  width: 200px;
+}
+
+.settings-group {
+  margin-bottom: 20px;
+}
+
+.settings-options button {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 5px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.settings-options button.active {
+  background-color: #00aaff;
+}
+
+.forecast-tabs button.active {
+  background-color: #00aaff;
+}
+
+.forecast-section {
+  margin-top: 30px;
+}
+
+.forecast-tabs {
+  display: flex;
+  justify-content: center;
+}
+
+.forecast-tabs button {
+  background-color: transparent;
+  color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+.forecast-tabs button:hover {
+  background-color: #555;
+}
+
+.weather-card {
+  background-color: #00152993;
+  color: white;
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.weather-card h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.weather-card .weather-section {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+</style>
