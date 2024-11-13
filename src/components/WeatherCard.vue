@@ -29,14 +29,6 @@
       </div>
     </transition>
     <CurrentWeather :weatherIcon="weatherIcon" :formattedTemperature="formattedTemperature" :weatherDescription="weatherDescription" :formattedFeelsLike="formattedFeelsLike" />
-
-    <!-- <div class="weather-metrics">
-      <div class="metric" v-for="(condition, index) in weatherConditions" :key="index">
-        <i :class="condition.icon"></i>
-        <span class="metric-name">{{ condition.name }}</span>
-        <span class="metric-value">{{ condition.value }}</span>
-      </div>
-    </div> -->
     <WeatherMetrics :weatherConditions="weatherConditions" />
     <AqiSection :aqi="aqi" :aqiPercentage="aqiPercentage" />
 
