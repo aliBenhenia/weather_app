@@ -1,7 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 .weather-card {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
     width: 702px;
     height: 612px;
     margin: 0 auto;
@@ -21,16 +20,21 @@
 }
 
 h1 {
-    font-size: 48px;
-    font-weight: 600;
+    font-size: 40px;
+    font-weight: 700;
     margin: 0;
     line-height: 1.2;
 }
 
-.date-time {
-    font-size: 18px;
-    color: #6b7280;
-    margin: 4px 0 0;
+.date-time, .time {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 4px 0 0;
+  font-weight: 500;
+}
+
+.time {
+  font-size: 14px;
 }
 
 .settings-button {
