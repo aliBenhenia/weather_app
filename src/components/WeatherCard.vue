@@ -94,8 +94,8 @@ export default {
       settingsIcon,
       lat: null as number | null,
       lon: null as number | null,
-      loading: true, // Loading state
-      locationDenied: false, // Location access denial flag
+      loading: true, 
+      locationDenied: false, 
     };
   },
   computed: {
@@ -133,8 +133,8 @@ export default {
       this.getLocation();
     },
     getLocation(): void {
-      const storedLat = localStorage.getItem('lat');
-      const storedLon = localStorage.getItem('lon');
+      const storedLat = sessionStorage.getItem('lat');
+      const storedLon = sessionStorage.getItem('lon');
 
       if (storedLat && storedLon) {
         this.lat = parseFloat(storedLat);
@@ -145,19 +145,19 @@ export default {
           position => {
             this.lat = position.coords.latitude;
             this.lon = position.coords.longitude;
-            localStorage.setItem('lat', this.lat.toString());
-            localStorage.setItem('lon', this.lon.toString());
+            sessionStorage.setItem('lat', this.lat.toString());
+            sessionStorage.setItem('lon', this.lon.toString());
             this.fetchWeatherData(this.lat, this.lon);
           },
           error => {
             console.error('Geolocation error:', error);
-            this.locationDenied = true; // Show error message
-            this.fetchWeatherDataByCity(this.cityName); // Fallback to default city
+            this.locationDenied = true; 
+            this.fetchWeatherDataByCity(this.cityName);
           }
         );
       } else {
         console.error('Geolocation not supported');
-        this.fetchWeatherDataByCity(this.cityName); // Fallback to default city
+        this.fetchWeatherDataByCity(this.cityName); 
       }
     },
     async fetchWeatherData(lat: number, lon: number): Promise<void> {

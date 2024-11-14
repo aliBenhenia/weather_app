@@ -14,6 +14,7 @@ export const fetchWeatherDataByCoordinates = async (lat: number, lon: number) =>
         }
       }
     );
+    console.log('response1==>', response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching weather data by coordinates:', error);
@@ -32,6 +33,7 @@ export const fetchWeatherDataByCity = async (city: string) => {
         }
       }
     );
+    console.log('response2==>', response.data);
     return response.data;
   } catch (error: any) {
     console.error('Error fetching weather data by city:', error);
