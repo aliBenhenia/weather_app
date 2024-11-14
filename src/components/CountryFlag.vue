@@ -40,17 +40,17 @@
   export default {
     data() {
       return {
-        country: null,
-        countryFlagUrl: "",
-        countryName: "",
-        city: "",
-        continent: "",
-        currency: "",
-        timezone: "",
-        isp: "",
-        region: "",
-        countryPhone: "",
-        isDropdownVisible: false,
+            country: null,
+            countryFlagUrl: "",
+            countryName: "",
+            city: "",
+            continent: "",
+            currency: "",
+            timezone: "",
+            isp: "",
+            region: "",
+            countryPhone: "",
+            isDropdownVisible: false,
       };
     },
     mounted() {
