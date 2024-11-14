@@ -8,6 +8,9 @@ A responsive weather app built with **Vue 3.5**, **TypeScript**, and **Vanilla C
 - **Axios**: For fetching API data
 - **FontAwesome**: Icons for weather visuals
 - **Docker Compose**: For containerized setup
+## Demo
+You can check out a live demo of the weather app here:  
+[Weather App Demo](https://musical-sawine-dd37e4.netlify.app)
 
 ## Features
 

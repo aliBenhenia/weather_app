@@ -57,14 +57,6 @@
       <ForecastContent :activeTab="activeTab"  />
     </div>
 
-    <!-- Location Access Denial Notification -->
-    <div v-if="locationDenied" class="location-alert">
-      <div class="location-alert-content">
-        <h3>Location Access Denied</h3>
-        <p>To get accurate weather information, please enable location access in your browser settings.</p>
-        <button class="retry-button" @click="requestLocationAccess">Try Again</button>
-      </div>
-    </div>
   </div>
 </template>
 
