@@ -42,10 +42,7 @@ const hourlyForecast = [
   { hour: "00:00", temp: 18, icon: "cloud" },
   { hour: "04:00", temp: 16, icon: "cloud" },
   { hour: "08:00", temp: 18, icon: "cloud" },
-  { hour: "12:00", temp: 22, icon: "sun" },
-  { hour: "16:00", temp: 24, icon: "sun" },
-  { hour: "20:00", temp: 20, icon: "rain" },
-  { hour: "00:00", temp: 18, icon: "cloud" },
+
 ]
 
 const getIcon = (icon) => {
@@ -82,6 +79,7 @@ const forecastData = computed(() => (props.activeTab === 'daily' ? dailyForecast
   position: relative;
   width: 100%;
   overflow: hidden;
+  margin-top: 28px;
 }
 
 .forecast-list {
@@ -89,7 +87,7 @@ const forecastData = computed(() => (props.activeTab === 'daily' ? dailyForecast
   flex-wrap: nowrap;  
   overflow-x: auto;
   padding-bottom: 16px;
-  gap: 10px;
+  gap: 4px;
   align-items: center;
   width: 100%;
 }
@@ -101,27 +99,27 @@ const forecastData = computed(() => (props.activeTab === 'daily' ? dailyForecast
   gap: 4px;
   flex: 0 0 auto; 
   min-width: 20%;  
-  max-width: 25%;  
+  max-width: 25%;
 }
 
 .day, .hour {
-  font-size: 1rem;
+  font-size: 14px;
   font-weight: 500;
   color: #1f2937;
 }
 
 .icon {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
 }
 
 .temp {
-  font-size: 1.25rem;
+  font-size: 14px;
   font-weight: 600;
 }
 
 .low-temp {
-  font-size: 1rem;
+  font-size: 14px;
   color: #9ca3af;
 }
 

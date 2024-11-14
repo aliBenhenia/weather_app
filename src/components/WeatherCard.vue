@@ -29,7 +29,7 @@
       </div>
     </transition>
 
-    <!-- Loader: Show while fetching data -->
+    
     <div v-if="loading" class="loader">
       <p>Loading weather data...</p>
     </div>
@@ -221,13 +221,13 @@ export default {
           icon: 'fas fa-wind'
         },
         {
-          name: 'Pressure',
-          value: `${data.main.pressure} hPa`,
-          icon: 'fas fa-tachometer-alt' 
-        },
+        name: 'AQI',
+        value: this.aqi.toString(),
+        icon: 'fas fa-smog' 
+      }
       ];
 
-      this.aqi = 50; // Sample AQI
+      this.aqi = 300; // Sample AQI
       this.aqiPercentage = (this.aqi / 500) * 100;
 
       this.loading = false; // Hide loader once data is fetched
