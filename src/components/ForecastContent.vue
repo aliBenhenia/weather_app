@@ -81,7 +81,6 @@ const forecastData = computed(() => (props.activeTab === 'daily' ? dailyForecast
   overflow: hidden;
   margin-top: 28px;
 }
-
 .forecast-list {
   display: flex;
   flex-wrap: nowrap;  
@@ -90,6 +89,7 @@ const forecastData = computed(() => (props.activeTab === 'daily' ? dailyForecast
   gap: 4px;
   align-items: center;
   width: 100%;
+
 }
 
 .forecast-item {
@@ -162,6 +162,9 @@ const forecastData = computed(() => (props.activeTab === 'daily' ? dailyForecast
 }
 
 @media (max-width: 480px) {
+  .forecast-content {
+    width: 300px;
+  }
   .forecast-list {
     gap: 8px;
   }
@@ -169,6 +172,7 @@ const forecastData = computed(() => (props.activeTab === 'daily' ? dailyForecast
   .forecast-item {
     min-width: 45%;
     max-width: 45%;
+    align-items: start;
   }
 
   .day, .hour {
